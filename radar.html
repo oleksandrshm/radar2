@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body {
+            perspective: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .radar-container {
+            position: relative;
+            width: 400px;
+            height: 200px;
+            margin-top: 100px; /* Adjust this value to lower the radar */
+        }
+        .radar {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #444;
+            border-radius: 100px;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+        .radar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 38px,
+                #444 40px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 38px,
+                #444 40px
+            );
+            border-radius: 100px;
+        }
+        .radar-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 100px;
+        }
+        .radar-grid::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 100px;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 38px,
+                #444 40px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 38px,
+                #444 40px
+            );
+        }
+        .oval {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #444;
+            border-radius: 50%;
+            top: 0;
+            left: 0;
+        }
+        .oval-bottom {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+        }
+        .radar-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #444;
+            border-radius: 100px;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+        }
+        .stand {
+            position: relative;
+            width: 30px;
+            height: 300px;
+            background: #444;
+            margin: 0 auto;
+            top: -80px;
+        }
+        .base {
+            position: relative;
+            width: 300px;
+            height: 60px;
+            background: linear-gradient(45deg, #ccc, #eee);
+            border: 2px solid #444;
+            border-radius: 20px;
+            margin: 0 auto;
+            top: -80px;
+        }
+        .radar-dot {
+            position: absolute;
+            width: 80px;
+            height: 60px;
+            background-color: #333;
+            border-radius: 10px;
+            top: -50px;
+            left: calc(50% - 40px);
+        }
+        .data-label {
+            position: relative;
+            color: black;
+            font-weight: bold;
+            font-size: 20px; /* Increased font size */
+            margin-bottom: 10px; /* Space between labels */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+        .right-data, .bottom-data {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .right-data {
+            position: absolute;
+            top: 50%;
+            left: -200px; /* Adjusted position to the left of the radar */
+            transform: translateY(-50%);
+        }
+        .bottom-data {
+            position: absolute;
+            bottom: -40px; /* Adjusted position below the radar */
+            left: 125%;
+            transform: translateX(-50%);
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+    <title>Radar</title>
+</head>
+<body>
+    <div class="radar-container">
+        <div class="radar">
+            <div class="radar-grid"></div>
+            <div class="oval"></div>
+            <div class="oval oval-bottom"></div>
+            <div class="radar-back"></div>
+        </div>
+        <div class="right-data">
+            <div class="data-label">Range: 45 km</div>
+            <div class="data-label">Speed: 300 m/s</div>
+            <div class="data-label">Bearing: 120°</div>
+            <div class="data-label">Altitude: 10,000 ft</div>
+            <div class="data-label">Signal: -85 dBm</div>
+            <div class="data-label">Mode: Active</div>
+            <div class="data-label">Range: 60 km</div>
+            <div class="data-label">Speed: 250 m/s</div>
+        </div>
+        <div class="bottom-data">
+            <div class="data-label">Bearing: 90°</div>
+            <div class="data-label">Altitude: 8,000 ft</div>
+            <div class="data-label">Signal: -70 dBm</div>
+            <div class="data-label">Mode: Passive</div>
+            <div class="data-label">Range: 55 km</div>
+            <div class="data-label">Speed: 280 m/s</div>
+            <div class="data-label">Bearing: 75°</div>
+            <div class="data-label">Altitude: 9,500 ft</div>
+        </div>
+    </div>
+    <div class="stand">
+        <div class="radar-dot"></div>
+    </div>
+    <div class="base"></div>
+
+    <script>
+        const radar = document.querySelector('.radar');
+        let angle = 0;
+        setInterval(() => {
+            angle += 1;
+            radar.style.transform = `rotateY(${angle}deg)`;
+        }, 10);
+
+        // Update data dynamically
+        const rightDataLabels = document.querySelectorAll('.right-data .data-label');
+        const bottomDataLabels = document.querySelectorAll('.bottom-data .data-label');
+        setInterval(() => {
+            rightDataLabels.forEach((label, index) => {
+                label.textContent = getRandomData(index);
+            });
+            bottomDataLabels.forEach((label, index) => {
+                label.textContent = getRandomData(index + 8);
+            });
+        }, 1000);
+
+        function getRandomData(index) {
+            const dataTypes = [
+                `Range: ${Math.floor(Math.random() * 100) + 1} km`,
+                `Speed: ${Math.floor(Math.random() * 500) + 1} m/s`,
+                `Bearing: ${Math.floor(Math.random() * 360)}°`,
+                `Altitude: ${Math.floor(Math.random() * 20000) + 1} ft`,
+                `Signal: -${Math.floor(Math.random() * 100) + 1} dBm`,
+                `Mode: ${Math.random() > 0.5 ? 'Active' : 'Passive'}`
+            ];
+            return dataTypes[index % dataTypes.length];
+        }
+    </script>
+</body>
+</html>
